@@ -1,11 +1,10 @@
-import { type } from "os";
 import React, { useEffect, useState } from "react";
 import "./App.css";
-
-type Courses = [{ id: string; number: string; title: string }];
+import CoursesItems from "./components/CoursesItems";
+import { Courses } from "./interfaces/Courses";
 
 const App = () => {
-  const [courses, setCourses] = useState<Courses>();
+  const [courses, setCourses] = useState<Courses[]>([]);
 
   useEffect(() => {
     fetch("http://localhost:5000/courses")
@@ -19,8 +18,9 @@ const App = () => {
   return (
     <div className="App">
       <ul>
-        {courses?.map((item) => (
-          <li key={item.id}>{item.title}</li>
+        {courses.map((course) => (
+          
+          <CoursesItems course={course}  />
         ))}
       </ul>
     </div>
