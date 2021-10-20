@@ -1,21 +1,28 @@
+import { type } from "os";
 import React, { useEffect, useState } from "react";
 import "./App.css";
 
+type Courses = [{ id: string; number: string; title: string }];
+
 const App = () => {
-  //const message = "My message"
-  const [message, setMessage] = useState("My message");
+  const [courses, setCourses] = useState<Courses>();
 
   useEffect(() => {
     fetch("http://localhost:5000/courses")
       .then((res) => res.json())
-      .then((obj) => {
-        setMessage(obj.message);
+      .then((courses) => {
+        console.log(courses);
+        setCourses(courses);
       });
   }, []);
 
   return (
     <div className="App">
-      <h1> {message}</h1>
+      <ul>
+        {courses?.map((item) => (
+          <li key={item.id}>{item.title}</li>
+        ))}
+      </ul>
     </div>
   );
 };
