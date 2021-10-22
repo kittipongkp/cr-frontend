@@ -1,21 +1,50 @@
-import React, {useState} from "react"
+import React, { useState } from "react";
+import { Courses } from "../interfaces/Courses";
 
-type CoursesItemProps = {}
+type CoursesItemProps = {
+  onNewCourseCreate?: (newCourse: Courses) => void;
+};
 
 const NewCoursesForm = (props: CoursesItemProps) => {
+  const [formVisible, setFormVisible] = useState<boolean>(false);
 
-    const [formVisible, setFormVisible] = useState<boolean>(false)
+  const [newCourseNumber, setNewCourseNumber] = useState<string>("");
+  const [newCourseTitle, setNewCourseTitle] = useState<string>("");
 
-    const [newCourseNumber, setNewCourseNumber] = useState<string>("")
-    const [newCourseTitle, setNewCourseTitle] = useState<string>("")
+  const handleNewCourseNumberChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setNewCourseNumber(e.target.value);
+  };
 
-    const handleNewCourseNumberChange = (e: React.ChangeEvent<HTMLInputElement>)=>{
-        setNewCourseNumber(e.target.value)
-      }
-    
-      const handleSave=()=>{
-        alert(`${newCourseNumber} : ${newCourseTitle}`)
-      }
+  const handleSave = () => {
+    //alert(`${newCourseNumber} : ${newCourseTitle}`);
+    const newCourse = {
+      number: newCourseNumber,
+      title: newCourseTitle,
+    };
+
+    try {
+      fetch("http://localhost:5000/courses", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newCourse),
+      })
+        .then((res) => res.json())
+        .then((saveNewCourse) => {
+          if (saveNewCourse.id !== undefined) {
+            if (props.onNewCourseCreate !== undefined) {
+              props.onNewCourseCreate(saveNewCourse);
+              setFormVisible(false);
+            }
+          } else {
+            alert("Save error");
+          }
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div>
@@ -38,7 +67,7 @@ const NewCoursesForm = (props: CoursesItemProps) => {
         </div>
       ) : null}
     </div>
-  )
-}
+  );
+};
 
-export default NewCoursesForm
+export default NewCoursesForm;
