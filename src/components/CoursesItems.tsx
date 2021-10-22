@@ -8,7 +8,7 @@ type CoursesItemProps = {
  const CoursesItems = (props: CoursesItemProps) => {
      let courses = props.course
     return (
-        <li key={courses.id}>
+        <li>
             {courses.number} - {courses.title}
         </li>
     )

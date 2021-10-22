@@ -1,53 +1,49 @@
-import React, { useEffect, useState } from "react";
-import "./App.css";
-import CoursesItems from "./components/CoursesItems";
-import { Courses } from "./interfaces/Courses";
+import React, { useEffect, useState } from "react"
+
+import "./App.css"
+import CoursesItems from "./components/CoursesItems"
+import NewCourseForm from './components/NewCourseForm'
+
+import { Courses } from "./interfaces/Courses"
 
 const App = () => {
-  const [courses, setCourses] = useState<Courses[]>([]);
+  const [courses, setCourses] = useState<Courses[]>([])
+ 
 
-  useEffect(() => {
-    fetch("http://localhost:5000/courses")
+  const fetchCourses = () => {
+    try {
+      fetch("http://localhost:5000/courses")
       .then((res) => res.json())
       .then((courses) => {
-        console.log(courses);
-        setCourses(courses);
-      });
-  }, []);
+        console.log(courses)
+        setCourses(courses)
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  
+  }
+
+
+
+  const handleNewCourseCreate = (course: Courses) => {}
+
+  useEffect(() => {
+    fetchCourses()
+  }, [])
 
   return (
     <div className="App">
       <ul>
         {courses.map((course) => (
-          
-          <CoursesItems course={course}  />
+          <CoursesItems key={course.id} course={course} />
         ))}
       </ul>
+      <NewCourseForm />
+     
     </div>
-  );
-};
+  )
+}
 
-// type AppState ={
-//   message:string;
-// }
 
-// class App extends React.Component {
-//   state: AppState ={
-//     message: "Default message"
-//   }
-
-//     componentDidMount(){
-//       fetch('http://localhost:5000/courses')
-//       .then(res => res.json()).then(obj => {
-//         this.setState({message: obj.message});
-//       })
-//     }
-
-//   render() {
-//     return <div>
-//       <h1>{this.state.message}</h1>
-//     </div>;
-//   }
-// }
-
-export default App;
+export default App
