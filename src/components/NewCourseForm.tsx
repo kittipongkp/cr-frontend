@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { Courses } from "../interfaces/Courses";
+import { createCourse } from "../services/coursesService";
 
 type CoursesItemProps = {
-  onNewCourseCreate?: (newCourse: Courses) => void;
+  onNewCourseCreate?: any;
 };
 
 const NewCoursesForm = (props: CoursesItemProps) => {
@@ -17,33 +17,39 @@ const NewCoursesForm = (props: CoursesItemProps) => {
     setNewCourseNumber(e.target.value);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     //alert(`${newCourseNumber} : ${newCourseTitle}`);
     const newCourse = {
       number: newCourseNumber,
       title: newCourseTitle,
     };
 
-    try {
-      fetch("http://localhost:5000/courses", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newCourse),
-      })
-        .then((res) => res.json())
-        .then((saveNewCourse) => {
-          if (saveNewCourse.id !== undefined) {
-            if (props.onNewCourseCreate !== undefined) {
-              props.onNewCourseCreate(saveNewCourse);
-              setFormVisible(false);
-            }
-          } else {
-            alert("Save error");
-          }
-        });
-    } catch (error) {
-      console.log(error);
-    }
+    await createCourse(newCourse);
+
+    props.onNewCourseCreate();
+
+    setFormVisible(false);
+
+    // try {
+    //   fetch("http://localhost:5000/courses", {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify(newCourse),
+    //   })
+    //     .then((res) => res.json())
+    //     .then((saveNewCourse) => {
+    //       if (saveNewCourse.id !== undefined) {
+    //         if (props.onNewCourseCreate !== undefined) {
+    //           props.onNewCourseCreate(saveNewCourse);
+    //           setFormVisible(false);
+    //         }
+    //       } else {
+    //         alert("Save error");
+    //       }
+    //     });
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   return (

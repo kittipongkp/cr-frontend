@@ -1,33 +1,24 @@
 import React, { useEffect, useState } from "react";
-
 import "./App.css";
 import CoursesItems from "./components/CoursesItems";
 import NewCourseForm from "./components/NewCourseForm";
 
 import { Courses } from "./interfaces/Courses";
+import { fetchCourses } from "./services/coursesService";
 
 const App = () => {
   const [courses, setCourses] = useState<Courses[]>([]);
 
-  const fetchCourses = () => {
-    try {
-      fetch("http://localhost:5000/courses")
-        .then((res) => res.json())
-        .then((courses) => {
-          console.log(courses);
-          setCourses(courses);
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleNewCourseCreate = (course: Courses) => {
-    fetchCourses();
+  const handleNewCourseCreate = () => {
+    fetchCourses().then((course) => {
+      setCourses(course);
+    });
   };
 
   useEffect(() => {
-    fetchCourses();
+    fetchCourses().then((course) => {
+      setCourses(course);
+    });
   }, []);
 
   return (
